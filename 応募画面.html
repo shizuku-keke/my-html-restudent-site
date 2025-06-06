@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>応募フォーム</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .main-content {
+      margin-right: 200px;
+      padding: 2rem;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+      border-left: 1px solid #ccc;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+    }
+
+    .sidebar a {
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .sidebar a.active {
+      background-color: #d9c9f4;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-content container">
+    <h2>求人応募フォーム</h2>
+    <p>以下の情報を入力して送信してください。</p>
+
+    <form id="applyForm">
+      <div class="mb-3">
+        <label class="form-label">職種</label>
+        <input type="text" class="form-control" id="jobTitle" readonly />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">雇い主（会社名）</label>
+        <input type="text" class="form-control" id="companyName" readonly />
+      </div>
+
+      <div class="mb-3">
+        <label for="name" class="form-label">お名前</label>
+        <input type="text" class="form-control" id="name" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">メールアドレス</label>
+        <input type="email" class="form-control" id="email" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="message" class="form-label">自己PR・志望動機</label>
+        <textarea class="form-control" id="message" rows="5" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">希望シフト（一週間分）</label>
+        <table class="table table-bordered">
+          <thead>
+            <tr><th>曜日</th><th>希望時間帯</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>月曜日</td><td><input type="text" class="form-control" id="shift-mon" placeholder="例: 9:00〜17:00" /></td></tr>
+            <tr><td>火曜日</td><td><input type="text" class="form-control" id="shift-tue" placeholder="例: 休み" /></td></tr>
+            <tr><td>水曜日</td><td><input type="text" class="form-control" id="shift-wed" placeholder="例: 13:00〜21:00" /></td></tr>
+            <tr><td>木曜日</td><td><input type="text" class="form-control" id="shift-thu" placeholder="例: 9:00〜17:00" /></td></tr>
+            <tr><td>金曜日</td><td><input type="text" class="form-control" id="shift-fri" placeholder="例: 休み" /></td></tr>
+            <tr><td>土曜日</td><td><input type="text" class="form-control" id="shift-sat" placeholder="例: 9:00〜13:00" /></td></tr>
+            <tr><td>日曜日</td><td><input type="text" class="form-control" id="shift-sun" placeholder="例: 休み" /></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button type="submit" class="btn btn-primary">応募を送信</button>
+      <a href="index.html" class="btn btn-secondary ms-2">← ホームに戻る</a>
+    </form>
+
+    <div id="applyHistorySection" class="mt-5">
+      <h3>応募履歴</h3>
+      <div id="applyHistoryCards" class="row gy-3"></div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <a href="index.html">ホーム</a>
+    <a href="clips.html">クリップ</a>
+    <a href="ユーザー.html">ユーザー</a>
+    <a href="設定.html">設定</a>
+    <a href="登録.html">登録</a>
+  </div>
+
+  <script>
+    function renderApplyHistory() {
+      const container = document.getElementById('applyHistoryCards');
+      container.innerHTML = '';
+
+      const history = JSON.parse(localStorage.getItem('applyHistory') || '[]');
+      if (history.length === 0) {
+        container.innerHTML = '<p>応募履歴はまだありません。</p>';
+        return;
+      }
+
+      history.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'col-md-6';
+
+        card.innerHTML = `
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">応募番号 ${index + 1}</h5>
+              <p><strong>職種:</strong> ${item.jobTitle || ''}</p>
+              <p><strong>会社名:</strong> ${item.companyName || ''}</p>
+              <p><strong>名前:</strong> ${item.name}</p>
+              <p><strong>メール:</strong> ${item.email}</p>
+              <p><strong>自己PR・志望動機:</strong> ${item.message}</p>
+              <p><strong>希望シフト:</strong><br>
+                月: ${item.shiftMon} <br>
+                火: ${item.shiftTue} <br>
+                水: ${item.shiftWed} <br>
+                木: ${item.shiftThu} <br>
+                金: ${item.shiftFri} <br>
+                土: ${item.shiftSat} <br>
+                日: ${item.shiftSun}
+              </p>
+              <p><small class="text-muted">応募日時: ${item.date}</small></p>
+              <button class="btn btn-danger btn-sm delete-btn" data-index="${index}">消去</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      // 削除ボタンにイベントを設定
+      const deleteButtons = container.querySelectorAll('.delete-btn');
+      deleteButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-index');
+          deleteApplyHistory(index);
+        });
+      });
+    }
+
+    function deleteApplyHistory(index) {
+      const history = JSON.parse(localStorage.getItem('applyHistory') || '[]');
+      history.splice(index, 1);
+      localStorage.setItem('applyHistory', JSON.stringify(history));
+      renderApplyHistory();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderApplyHistory();
+
+      const savedName = localStorage.getItem('username');
+      if (savedName) document.getElementById('name').value = savedName;
+
+      const savedEmail = localStorage.getItem('email');
+      if (savedEmail) document.getElementById('email').value = savedEmail;
+
+      // 職種・会社名を反映
+      document.getElementById('jobTitle').value = localStorage.getItem('applyTitle') || '';
+      document.getElementById('companyName').value = localStorage.getItem('applyCompany') || '';
+    });
+
+    document.getElementById('applyForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      const shiftMon = document.getElementById('shift-mon').value || 'なし';
+      const shiftTue = document.getElementById('shift-tue').value || 'なし';
+      const shiftWed = document.getElementById('shift-wed').value || 'なし';
+      const shiftThu = document.getElementById('shift-thu').value || 'なし';
+      const shiftFri = document.getElementById('shift-fri').value || 'なし';
+      const shiftSat = document.getElementById('shift-sat').value || 'なし';
+      const shiftSun = document.getElementById('shift-sun').value || 'なし';
+
+      const jobTitle = document.getElementById('jobTitle').value || '';
+      const companyName = document.getElementById('companyName').value || '';
+
+      const history = JSON.parse(localStorage.getItem('applyHistory') || '[]');
+      history.push({
+        jobTitle,
+        companyName,
+        name,
+        email,
+        message,
+        shiftMon,
+        shiftTue,
+        shiftWed,
+        shiftThu,
+        shiftFri,
+        shiftSat,
+        shiftSun,
+        date: new Date().toLocaleString(),
+      });
+      localStorage.setItem('applyHistory', JSON.stringify(history));
+
+      alert('応募内容を送信しました。ありがとうございました！');
+      this.reset();
+
+      // 再度職種・会社名をセット（resetで消えるため）
+      document.getElementById('jobTitle').value = jobTitle;
+      document.getElementById('companyName').value = companyName;
+
+      renderApplyHistory();
+    });
+  </script>
+</body>
+</html>

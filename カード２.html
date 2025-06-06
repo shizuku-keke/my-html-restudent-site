@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>求人詳細 - Web営業職（未経験歓迎）</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .job-image {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .image-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .clip-button {
+      position: absolute;
+      top: 3px;
+      right: 160px;
+      background-color: hsl(221, 70%, 82%);
+      color: black;
+      border: none;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .clip-button:hover {
+      background-color: hsl(221, 70%, 60%);
+      color: white;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+      border-left: 1px solid #ccc;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+    }
+
+    .sidebar a {
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .sidebar a.active {
+      background-color: #d9c9f4;
+      font-weight: bold;
+    }
+
+    .main-content {
+      margin-right: 200px;
+      padding: 2rem;
+    }
+
+    .apply-button {
+      font-size: 1.5rem;
+      padding: 1rem 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-content container py-4">
+    <h2> Web営業職（未経験歓迎）</h2>
+
+    <!-- 画像とクリップボタン -->
+    <div class="image-container">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiV1lnHRWMAJqt83rqXvyyC51dtxhs9MEucmjS6EwsfjJ0Y7eq9itmjvjuMGu3lQyaDcSKPHZA1nEAuvqYnC5vglySYOYmBPImIPQIcinjTD3VRw_GL8xyPbR23aO-QMeCZqV01aZEAnVg/s180-c/business_eigyou_man.png" 
+           alt="求人イメージ画像" 
+           class="job-image">
+      <button class="clip-button" id="clipBtn">クリップする</button>
+    </div>
+
+    <div class="job-section">
+      <h4>職種</h4>
+      <p id="jobTitle">Webエンジニア</p>
+
+      <h4>仕事内容の詳細</h4>
+      <p id="jobDescription">人と話すのが好きな方へ！丁寧な研修制度あり。リモートOK。</p>
+
+      <h4>給料</h4>
+      <p id="jobSalary">月給 200,000〜400,000円（経験により応相談）</p>
+
+      <h4>雇い主</h4>
+      <p id="jobCompany">うえうえ株式会社（東京都 渋谷区）</p>
+
+      <h4>条件</h4>
+      <ul id="jobConditions">
+        <li>週2日以上勤務可能な方</li>
+        <li> Webデザイン可能な方</li>
+        <li>リモート環境での業務に慣れている方</li>
+      </ul>
+    </div>
+
+    <!-- 応募ボタン -->
+    <div class="text-center mt-4">
+      <a class="btn btn-success apply-button" id="applyBtn">📨 応募する</a>
+      <a href="index.html" class="btn btn-secondary mt-3">← ホームに戻る</a>
+    </div>
+  </div>
+
+  <!-- サイドバー -->
+  <div class="sidebar">
+    <a href="index.html" class="active">ホーム</a>
+    <a href="clips.html">クリップ</a>
+    <a href="ユーザー.html">ユーザー</a>
+    <a href="設定.html">設定</a>
+    <a href="登録.html">登録</a>
+  </div>
+
+  <script>
+    // クリップ機能
+    document.getElementById('clipBtn').addEventListener('click', () => {
+      const job = {
+        title: document.getElementById('jobTitle').textContent,
+        description: document.getElementById('jobDescription').textContent,
+        salary: document.getElementById('jobSalary').textContent,
+        company: document.getElementById('jobCompany').textContent,
+        conditions: Array.from(document.querySelectorAll('#jobConditions li')).map(li => li.textContent),
+        image: document.querySelector('.job-image').src,
+        url: location.href
+      };
+
+      let clips = JSON.parse(localStorage.getItem('clips') || '[]');
+      const exists = clips.some(c => c.title === job.title && c.company === job.company);
+      if (exists) {
+        alert('この求人は既にクリップされています。');
+        return;
+      }
+
+      clips.push(job);
+      localStorage.setItem('clips', JSON.stringify(clips));
+      alert('求人をクリップしました！');
+    });
+
+    // 応募ボタン押下時にlocalStorage保存と遷移
+    document.getElementById('applyBtn').addEventListener('click', () => {
+      const company = document.getElementById('jobCompany').textContent;
+      const title = document.getElementById('jobTitle').textContent;
+
+      localStorage.setItem('applyCompany', company);
+      localStorage.setItem('applyTitle', title);
+
+      window.location.href = '応募画面.html';
+    });
+  </script>
+
+</body>
+</html>
+

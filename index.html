@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>求人ポータル - ホーム</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      font-family: Arial, sans-serif;
+    }
+
+    .sidebar {
+      width: 120px;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+      border-left: 1px solid #ccc;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .sidebar a {
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .sidebar a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .sidebar a.active {
+      background-color: #d9c9f4;
+      font-weight: bold;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 2rem;
+      margin-right: 120px;
+    }
+
+    /* 上部エリア全体の背景色とスタイル */
+    .header-area {
+      background-color: hsl(221, 70%, 82%);
+      padding: 1rem 2rem;
+      border-radius: 7px;
+      color: rgb(0, 0, 0);
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-area h2 {
+      margin: 0 1rem 0 0;
+      font-weight: bold;
+    }
+
+    .header-area form {
+      flex-grow: 1;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .header-area input.form-control {
+      flex-grow: 1;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+    }
+
+    .header-area input.form-control:focus {
+      box-shadow: none;
+      outline: none;
+    }
+
+    /* 検索ボタンを白背景に */
+    .btn-custom-search {
+      background-color: #ffffff; /* 白 */
+      color: hsl(221, 70%, 50%); /* 紫系の文字色 */
+      border: 1px solid hsl(221, 70%, 50%);
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-custom-search:hover {
+      background-color: hsl(221, 70%, 82%);
+      color: #000000;
+      border-color: hsl(221, 70%, 82%);
+    }
+
+    .job-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: 0.2s;
+      margin-bottom: 1.5rem;
+    }
+
+    .job-card:hover {
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .job-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .job-card-body {
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-content">
+
+    <!-- タイトル＋検索バー -->
+    <div class="header-area">
+      <h2>学内求人サイト</h2>
+      <form role="search" action="#" method="GET">
+        <input class="form-control" type="search" placeholder="求人を検索..." aria-label="Search" name="q" />
+        <button class="btn btn-custom-search" type="submit">検索</button>
+      </form>
+    </div>
+
+    <!-- 求人カード表示エリア -->
+    <div class="row">
+      <!-- カード1 -->
+      <div class="col-md-3">
+  <a href="a.html" class="text-decoration-none text-dark">
+    <div class="job-card">
+      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgJWP8a9vbGKmeUKbagxvtnL6XsYxKaKeQ01Vm8uiQPdkAdpUQtSGaICZO9MY5P-uzPFhJ_i6txSb8aSjOlxNEgMTJEi8bh0QkHNv8L-96G4uERtiwIEDn7F9dj8Vie7_vCLxqOIH6Qtt0B/s800/job_programmer.png" alt="求人画像" />
+      <div class="job-card-body">
+        <h5>Webエンジニア募集</h5>
+        <p>スタートアップで一緒に働きませんか？完全リモートOK！</p>
+      </div>
+    </div>
+  </a>
+</div>
+
+
+      <!-- カード2 -->
+      <div class="col-md-3">
+        <a href="カード２.html" class="text-decoration-none text-dark">
+          <div class="job-card">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiV1lnHRWMAJqt83rqXvyyC51dtxhs9MEucmjS6EwsfjJ0Y7eq9itmjvjuMGu3lQyaDcSKPHZA1nEAuvqYnC5vglySYOYmBPImIPQIcinjTD3VRw_GL8xyPbR23aO-QMeCZqV01aZEAnVg/s180-c/business_eigyou_man.png" alt="求人画像" />
+            <div class="job-card-body">
+              <h5>営業職（未経験歓迎）</h5>
+              <p>人と話すのが好きな方へ！丁寧な研修制度あり。</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- カード3 -->
+      <div class="col-md-3">
+        <a href="job3.html" class="text-decoration-none text-dark">
+          <div class="job-card">
+            <img src="https://placehold.jp/300x200.png" alt="求人画像" />
+            <div class="job-card-body">
+              <h5>デザイナー募集</h5>
+              <p>UI/UXに強い方歓迎！フルリモート可能です。</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- カード4 -->
+      <div class="col-md-3">
+        <a href="job4.html" class="text-decoration-none text-dark">
+          <div class="job-card">
+            <img src="https://placehold.jp/300x200.png" alt="求人画像" />
+            <div class="job-card-body">
+              <h5>カスタマーサポート</h5>
+              <p>ユーザー対応が得意な方、急募！週3日勤務OK！</p>
+            </div>
+          </div>
+        </a>
+      </div>
+       <!-- カード5 -->
+      <div class="col-md-3">
+        <a href="job4.html" class="text-decoration-none text-dark">
+          <div class="job-card">
+            <img src="https://placehold.jp/300x200.png" alt="求人画像" />
+            <div class="job-card-body">
+              <h5>研究補助</h5>
+              <p>細かい作業が得意な方、急募！週4日勤務OK！</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- サイドバー -->
+ <div class="sidebar">
+  <a href="index.html" class="active">ホーム</a>
+  <a href="clips.html" >クリップ</a>
+  <a href="ユーザー.html">ユーザー</a>
+  <a href="設定.html">設定</a>
+  <a href="登録.html">登録</a>
+</div>
+<!-- ↓ このエリアの中にカードを表示する -->
+<script>
+  const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+
+  const container = document.querySelector('.row');
+
+  jobs.forEach(job => {
+    const card = document.createElement('div');
+    card.className = 'col-md-3';
+    card.innerHTML = `
+      <div class="job-card">
+        <img src="${job.image}" alt="求人画像">
+        <div class="job-card-body">
+          <h5>${job.title}</h5>
+          <p>${job.description}</p>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+</script>
+
+</body>
+</html>

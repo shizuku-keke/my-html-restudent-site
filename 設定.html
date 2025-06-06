@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>設定</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f0f2f5;
+    }
+
+    .main-content {
+      margin-right: 220px;
+      padding: 2rem;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+      border-left: 1px solid #ccc;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+    }
+
+    .sidebar a {
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      text-decoration: none;
+      color: #000;
+      transition: background-color 0.2s;
+    }
+
+    .sidebar a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .sidebar a.active {
+      background-color: #d9c9f4;
+      font-weight: bold;
+    }
+
+    .card-section {
+      margin-bottom: 2rem;
+    }
+
+    .danger-zone {
+      border: 1px solid #dc3545;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background-color: #fff5f5;
+    }
+
+    #applyHistoryCards::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    #applyHistoryCards::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-content">
+    <h2 class="mb-4">設定</h2>
+
+    <div class="card-section">
+      <div class="card">
+        <div class="card-header">表示設定</div>
+        <div class="card-body">
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="darkMode">
+            <label class="form-check-label" for="darkMode">ダークモード</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-section">
+      <div class="card">
+        <div class="card-header">通知設定</div>
+        <div class="card-body">
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="notify">
+            <label class="form-check-label" for="notify">求人変更時に通知</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-4" id="saveSettings">保存</button>
+
+    <div class="card-section">
+      <div class="card">
+        <div class="card-header">応募履歴</div>
+        <div class="card-body">
+          <div id="applyHistoryCards" class="d-flex gap-3 flex-nowrap overflow-auto pb-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="danger-zone">
+      <h5 class="text-danger">危険ゾーン</h5>
+      <p>アカウントを削除するとすべてのデータが失われます。</p>
+      <button id="deleteAccount" class="btn btn-danger">アカウント削除（データ初期化）</button>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <a href="index.html">ホーム</a>
+    <a href="clips.html">クリップ</a>
+    <a href="ユーザー.html">ユーザー</a>
+    <a href="設定.html" class="active">設定</a>
+    <a href="登録.html">登録</a>
+  </div>
+
+  <script>
+    document.getElementById('saveSettings').addEventListener('click', () => {
+      const darkMode = document.getElementById('darkMode').checked;
+      const notify = document.getElementById('notify').checked;
+      localStorage.setItem('darkMode', darkMode);
+      localStorage.setItem('notify', notify);
+      alert('設定を保存しました。');
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const darkMode = localStorage.getItem('darkMode') === 'true';
+      const notify = localStorage.getItem('notify') === 'true';
+      document.getElementById('darkMode').checked = darkMode;
+      document.getElementById('notify').checked = notify;
+      renderApplyHistoryCards();
+    });
+
+    document.getElementById('deleteAccount').addEventListener('click', () => {
+      if (confirm('本当にアカウント情報を削除しますか？')) {
+        localStorage.clear();
+        alert('データを削除しました。ページをリロードします。');
+        location.reload();
+      }
+    });
+
+    function renderApplyHistoryCards() {
+      const container = document.getElementById('applyHistoryCards');
+      if (!container) return;
+      container.innerHTML = '';
+      const history = JSON.parse(localStorage.getItem('applyHistory') || '[]');
+      if (history.length === 0) {
+        container.innerHTML = '<p>応募履歴はまだありません。</p>';
+        return;
+      }
+      history.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'flex-shrink-0';
+        card.style.minWidth = '300px';
+        card.innerHTML = `
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">応募番号 ${index + 1}</h5>
+              <p><strong>職種:</strong> ${item.jobTitle || ''}</p>
+              <p><strong>会社名:</strong> ${item.companyName || ''}</p>
+              <p><strong>名前:</strong> ${item.name}</p>
+              <p><strong>メール:</strong> ${item.email}</p>
+              <p><strong>自己PR・志望動機:</strong> ${item.message}</p>
+              <p><small class="text-muted">応募日時: ${item.date}</small></p>
+              <button class="btn btn-danger btn-sm delete-btn" data-index="${index}">消去</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      container.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-index');
+          const history = JSON.parse(localStorage.getItem('applyHistory') || '[]');
+          history.splice(index, 1);
+          localStorage.setItem('applyHistory', JSON.stringify(history));
+          renderApplyHistoryCards();
+        });
+      });
+    }
+  </script>
+</body>
+</html>

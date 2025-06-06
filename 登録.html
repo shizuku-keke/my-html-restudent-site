@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>求人登録</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .sidebar {
+      width: 200px;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+      border-left: 1px solid #ccc;
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+    }
+    .sidebar a {
+      width: 100%;
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .sidebar a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .sidebar a.active {
+      background-color: #d9c9f4;
+      font-weight: bold;
+    }
+    .main-content {
+      margin-right: 200px;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body class="container py-4">
+
+  <h2>新しい求人を登録</h2>
+
+  <form id="jobForm">
+    <div class="mb-3">
+      <label for="title" class="form-label">職種</label>
+      <input type="text" class="form-control" id="title" required />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">仕事内容</label>
+      <textarea class="form-control" id="description" required></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="company" class="form-label">会社名</label>
+      <input type="text" class="form-control" id="company" required />
+    </div>
+    <div class="mb-3">
+      <label for="salary" class="form-label">給料</label>
+      <input type="text" class="form-control" id="salary" required />
+    </div>
+    <div class="mb-3">
+      <label for="image" class="form-label">画像URL</label>
+      <input type="text" class="form-control" id="image" />
+    </div>
+
+<!-- ボタン横並び -->
+<div style="display: flex; gap: 1rem; margin-top: 1rem;">
+  <button type="submit" class="btn btn-primary">登録</button>
+  <button type="button" class="btn btn-secondary" onclick="location.href='履歴.html'">登録履歴を見る</button>
+</div>
+
+
+  </form>
+
+  <script>
+    document.getElementById('jobForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const job = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        company: document.getElementById('company').value,
+        salary: document.getElementById('salary').value,
+        image: document.getElementById('image').value || "https://placehold.jp/300x200.png"
+      };
+
+      const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+      jobs.push(job);
+      localStorage.setItem('jobs', JSON.stringify(jobs));
+
+      alert('求人を登録しました！');
+      window.location.href = 'index.html'; // 登録後にホームに戻る
+    });
+  </script>
+
+  <!-- サイドバー -->
+
+  <div class="sidebar">
+    <a href="index.html">ホーム</a>
+    <a href="clips.html" >クリップ</a>
+    <a href="ユーザー.html">ユーザー</a>
+    <a href="設定.html">設定</a>
+    <a href="登録.html" class="active">登録</a>
+  </div>
+</body>
+</html>
