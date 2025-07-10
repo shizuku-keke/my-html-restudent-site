@@ -2,8 +2,10 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>求人ポータル - ホーム</title>
+  <!-- ▼▼▼ 1. viewportを固定幅に設定しました ▼▼▼ -->
+  <meta name="viewport" content="width=1024" />
+  <!-- ▲▲▲ ここまで ▲▲▲ -->
+  <title>麗澤求人ポータル - ホーム</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     body {
@@ -15,7 +17,7 @@
     }
 
     .sidebar {
-      width: 120px;
+      width: 200px;
       background-color: #f8f9fa;
       display: flex;
       flex-direction: column;
@@ -26,8 +28,8 @@
       right: 0;
       top: 0;
       bottom: 0;
+      z-index: 1000;
     }
-
     .sidebar a {
       width: 100%;
       padding: 1rem;
@@ -36,11 +38,6 @@
       text-decoration: none;
       color: #000;
     }
-
-    .sidebar a:hover {
-      background-color: #f1f1f1;
-    }
-
     .sidebar a.active {
       background-color: #d9c9f4;
       font-weight: bold;
@@ -49,7 +46,7 @@
     .main-content {
       flex-grow: 1;
       padding: 2rem;
-      margin-right: 120px;
+      margin-right: 200px;
     }
 
     .header-area {
@@ -133,7 +130,6 @@
       transition: background-color 0.3s;
     }
 
-     
     .tag-btn.active{
       background-color: #d9c9f4;
       color: rgb(0, 0, 0);
@@ -160,30 +156,30 @@
     .hidden {
       display: none !important;
     }
-
+    
     .custom-tag {
-  background-color: #e0e0e0;
-  color: #333;
-  border: none;
-  margin: 0.2rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 0.75rem; /* ← 小さくするポイント！ */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+      background-color: #e0e0e0;
+      color: #333;
+      border: none;
+      margin: 0.2rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-
+    /* ▼▼▼ 2. 前回追加したスマホ用の@mediaクエリは削除しました ▼▼▼ */
   </style>
 </head>
 <body>
 
   <div class="main-content">
     <div class="header-area">
-      <h2>学内求人サイト</h2>
+      <h2>麗澤大学求人サイト</h2>
       <form role="search">
         <input class="form-control" type="search" placeholder="求人を検索" />
         <button class="btn btn-custom-search" type="submit">検索</button>
@@ -200,165 +196,101 @@
     <a href="clips.html">クリップ</a>
     <a href="ユーザー.html">ユーザー</a>
     <a href="設定.html">設定</a>
-    <a href="登録.html">登録</a>
+    <a href="#" onclick="goToRegister()">登録</a>
   </div>
 
   <script>
-  const defaultJobs = [
-   {
-    title: "Webエンジニア募集",
-    description: "スタートアップで一緒に働きませんか？完全リモートOK！",
-    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgJWP8a9vbGKmeUKbagxvtnL6XsYxKaKeQ01Vm8uiQPdkAdpUQtSGaICZO9MY5P-uzPFhJ_i6txSb8aSjOlxNEgMTJEi8bh0QkHNv8L-96G4uERtiwIEDn7F9dj8Vie7_vCLxqOIH6Qtt0B/s800/job_programmer.png",
-    tags: "エンジニア,週4日～,リモートOK",
-    url: "a.html"
-     },
-    {
-      title: "営業職（未経験歓迎）",
-      description: "人と話すのが好きな方へ！丁寧な研修制度あり。",
-      image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiV1lnHRWMAJqt83rqXvyyC51dtxhs9MEucmjS6EwsfjJ0Y7eq9itmjvjuMGu3lQyaDcSKPHZA1nEAuvqYnC5vglySYOYmBPImIPQIcinjTD3VRw_GL8xyPbR23aO-QMeCZqV01aZEAnVg/s180-c/business_eigyou_man.png",
-      tags: "営業,週2日～,リモートOK"
-    },
-    {
-      title: "デザイナー募集",
-      description: "UI/UXに強い方歓迎！フルリモート可能です。",
-      image: "https://placehold.jp/300x200.png",
-      tags: "デザイン,リモートOK"
-    },
-    {
-      title: "カスタマーサポート",
-      description: "ユーザー対応が得意な方、急募！週3日勤務OK！",
-      image: "https://placehold.jp/300x200.png",
-      tags: "カスタマー,営業"
-    },
-    {
-      title: "研究補助",
-      description: "細かい作業が得意な方、急募！週4日勤務OK！",
-      image: "https://placehold.jp/300x200.png",
-      tags: "研究職"
-    }
-  ];
-
-  const storedJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-const allJobs = [...defaultJobs, ...storedJobs];
-const jobContainer = document.getElementById('jobContainer');
-const tagContainer = document.getElementById('tagContainer');
-const searchInput = document.querySelector('input[type="search"]');
-const searchForm = document.querySelector('form[role="search"]');
-const activeTags = new Set();
-
-// 求人カード生成（タグも見えるように）
-function createJobCard(job) {
-  const card = document.createElement('div');
-  card.className = 'col-md-3 job-item';
-  card.setAttribute('data-tags', job.tags || '');
-
-  // タグHTML生成
-  const tagHTML = (job.tags || '')
-  .split(',')
-  .map(t => t.trim())
-  .filter(t => t !== '')
-  .map(t => `<span class="custom-tag">${t}</span>`)
-  .join('');
-
-
-  card.innerHTML = `
-    <a href="${job.url || '#'}" class="text-decoration-none text-dark">
-      <div class="job-card">
-        <img src="${job.image}" alt="求人画像" />
-        <div class="job-card-body">
-          <h5>${job.title}</h5>
-          <p>${job.description}</p>
-          <div class="job-tags mt-2">${tagHTML}</div>
-        </div>
-      </div>
-    </a>
-  `;
-
-  return card;
-}
-
-// すべての求人カードを表示
-function renderJobs() {
-  jobContainer.innerHTML = ''; // クリア
-  allJobs.forEach(job => {
-    const card = createJobCard(job);
-    jobContainer.appendChild(card);
-  });
-}
-
-// タグボタンを生成（重複なく）
-function renderTagButtons() {
-  tagContainer.innerHTML = ''; // クリア
-
-  // すべてのタグを取得
-  const tagSet = new Set();
-  allJobs.forEach(job => {
-    (job.tags || '').split(',').map(t => t.trim()).filter(t => t !== '').forEach(t => tagSet.add(t));
-  });
-
-  tagSet.forEach(tag => {
-    const btn = document.createElement('button');
-    btn.className = 'tag-btn';
-    btn.textContent = tag;
-
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('active');
-      if (btn.classList.contains('active')) {
-        activeTags.add(tag);
-      } else {
-        activeTags.delete(tag);
+    const defaultJobs = [
+      {
+        title: "Webエンジニア募集",
+        description: "スタートアップで一緒に働きませんか？完全リモートOK！",
+        image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgJWP8a9vbGKmeUKbagxvtnL6XsYxKaKeQ01Vm8uiQPdkAdpUQtSGaICZO9MY5P-uzPFhJ_i6txSb8aSjOlxNEgMTJEi8bh0QkHNv8L-96G4uERtiwIEDn7F9dj8Vie7_vCLxqOIH6Qtt0B/s800/job_programmer.png",
+        tags: "エンジニア,週4日～,リモートOK",
+        url: "a.html"
+      },
+      {
+        title: "営業職（未経験歓迎）",
+        description: "人と話すのが好きな方へ！丁寧な研修制度あり。",
+        image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiV1lnHRWMAJqt83rqXvyyC51dtxhs9MEucmjS6EwsfjJ0Y7eq9itmjvjuMGu3lQyaDcSKPHZA1nEAuvqYnC5vglySYOYmBPImIPQIcinjTD3VRw_GL8xyPbR23aO-QMeCZqV01aZEAnVg/s180-c/business_eigyou_man.png",
+        tags: "営業,週2日～,リモートOK" ,
+        url: "カード２.html"
+      },
+      {
+        title: "デザイナー募集",
+        description: "UI/UXに強い方歓迎！フルリモート可能です。",
+        image: "https://placehold.jp/300x200.png",
+        tags: "デザイン,リモートOK"
+      },
+      {
+        title: "カスタマーサポート",
+        description: "ユーザー対応が得意な方、急募！週3日勤務OK！",
+        image: "https://placehold.jp/300x200.png",
+        tags: "カスタマー,営業"
+      },
+      {
+        title: "研究補助",
+        description: "細かい作業が得意な方、急募！週4日勤務OK！",
+        image: "https://placehold.jp/300x200.png",
+        tags: "研究職"
       }
-      filterJobs();
-    });
+    ];
 
-    tagContainer.appendChild(btn);
-  });
-}
+    const storedJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+    const allJobs = [...defaultJobs, ...storedJobs];
+    const jobContainer = document.getElementById('jobContainer');
+    const tagContainer = document.getElementById('tagContainer');
+    const searchInput = document.querySelector('input[type="search"]');
+    const searchForm = document.querySelector('form[role="search"]');
+    const activeTags = new Set();
 
-// フィルター処理
-function filterJobs() {
-  const keyword = searchInput.value.trim().toLowerCase();
+    function createJobCard(job) {
+      const card = document.createElement('div');
+      // ▼▼▼ 2. カードのクラスを元の状態に戻しました ▼▼▼
+      card.className = 'col-md-3 job-item'; 
+      // ▲▲▲ ここまで ▲▲▲
+      card.setAttribute('data-tags', job.tags || '');
 
-  document.querySelectorAll('.job-item').forEach(item => {
-    const itemTags = (item.dataset.tags || '').split(',').map(t => t.trim());
-    const title = item.querySelector('h5').textContent.toLowerCase();
-    const description = item.querySelector('p').textContent.toLowerCase();
+      const tagHTML = (job.tags || '')
+        .split(',')
+        .map(t => t.trim())
+        .filter(t => t !== '')
+        .map(t => `<span class="custom-tag">${t}</span>`)
+        .join('');
 
-    const tagMatch = activeTags.size === 0 || [...activeTags].some(t => itemTags.includes(t));
-    const keywordMatch = keyword === '' || title.includes(keyword) || description.includes(keyword);
+      card.innerHTML = `
+        <a href="${job.url || '#'}" class="text-decoration-none text-dark">
+          <div class="job-card">
+            <img src="${job.image}" alt="求人画像" />
+            <div class="job-card-body">
+              <h5>${job.title}</h5>
+              <p>${job.description}</p>
+              <div class="job-tags mt-2">${tagHTML}</div>
+            </div>
+          </div>
+        </a>
+      `;
+      return card;
+    }
 
-    item.classList.toggle('hidden', !(tagMatch && keywordMatch));
-  });
-}
+    function renderJobs() {
+      jobContainer.innerHTML = '';
+      allJobs.forEach(job => {
+        const card = createJobCard(job);
+        jobContainer.appendChild(card);
+      });
+    }
 
-// 初期表示
-renderJobs();
-renderTagButtons();
+    function renderTagButtons() {
+      tagContainer.innerHTML = '';
+      const tagSet = new Set();
+      allJobs.forEach(job => {
+        (job.tags || '').split(',').map(t => t.trim()).filter(t => t).forEach(t => tagSet.add(t));
+      });
 
-// 検索フォーム送信時の処理
-searchForm.addEventListener('submit', e => {
-  e.preventDefault();
-  filterJobs();
-});
-  </script>
-  
-  <script>
-    function addTagsToCards() {
-      const newJobItems = document.querySelectorAll('.job-item');
-    
-    const newTags = new Set();
-
-    newJobItems.forEach(item => {
-      const tags = item.dataset.tags?.split(',') || [];
-      tags.forEach(tag => newTags.add(tag.trim()));
-    });
-
-    newTags.forEach(tag => {
-      if (![...tagContainer.children].some(btn => btn.textContent === tag)) {
+      tagSet.forEach(tag => {
         const btn = document.createElement('button');
         btn.className = 'tag-btn';
         btn.textContent = tag;
-
         btn.addEventListener('click', () => {
           btn.classList.toggle('active');
           if (btn.classList.contains('active')) {
@@ -368,35 +300,52 @@ searchForm.addEventListener('submit', e => {
           }
           filterJobs();
         });
-
         tagContainer.appendChild(btn);
-      }
+      });
+    }
+
+    function filterJobs() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      document.querySelectorAll('.job-item').forEach(item => {
+        const itemTags = (item.dataset.tags || '').split(',').map(t => t.trim());
+        const title = item.querySelector('h5').textContent.toLowerCase();
+        const description = item.querySelector('p').textContent.toLowerCase();
+        const tagMatch = activeTags.size === 0 || [...activeTags].some(t => itemTags.includes(t));
+        const keywordMatch = keyword === '' || title.includes(keyword) || description.includes(keyword);
+        item.classList.toggle('hidden', !(tagMatch && keywordMatch));
+      });
+    }
+
+    renderJobs();
+    renderTagButtons();
+
+    searchForm.addEventListener('submit', e => {
+      e.preventDefault();
+      filterJobs();
     });
-  const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
-  const container = document.querySelector('.row');
 
-  jobs.forEach(job => {
-    const card = document.createElement('div');
-    card.className = 'col-md-3 job-item';
-    card.setAttribute('data-tags', job.tags || '');
+    function goToRegister() {
+      // パスワードを設定
+      const correctPassword = "job123";
 
-    card.innerHTML = `
-      <a href="#" class="text-decoration-none text-dark">
-        <div class="job-card">
-          <img src="${job.image}" alt="求人画像">
-          <div class="job-card-body">
-            <h5>${job.title}</h5>
-            <p>${job.description}</p>
-          </div>
-        </div>
-      </a>
-    `;
+      // パスワードの入力を求めるプロンプトを表示
+      const input = prompt("管理用パスワードを入力してください：");
 
-    container.appendChild(card);
-  });
+      // 入力がキャンセルされた場合（何もしない）
+      if (input === null) {
+        return;
+      }
 
-  // タグを追加
-  addTagsToCards();
-</script>
+      // パスワードが正しいかチェック
+      if (input === correctPassword) {
+        // 正しければ登録ページへ移動
+        window.location.href = "登録.html";
+      } else {
+        // 間違っていればアラートを表示
+        alert("パスワードが間違っています。");
+      }
+    }
+  </script>
+
 </body>
 </html>
