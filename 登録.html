@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <title>求人登録</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
+    body {
+      padding-bottom: 5rem; /* フッターやボタンが隠れないように余白を追加 */
+    }
     .sidebar {
       width: 200px;
       background-color: #f8f9fa;
@@ -28,85 +30,104 @@
       text-decoration: none;
       color: #000;
     }
-
     .sidebar a:hover {
       background-color: #f1f1f1;
     }
-
     .sidebar a.active {
       background-color: #d9c9f4;
       font-weight: bold;
     }
+    /* メインコンテンツがサイドバーと重ならないようにマージンを設定 */
     .main-content {
-      margin-right: 200px;
+      margin-right: 200px; /* サイドバーの幅 */
       padding: 2rem;
+    }
+    /* Bootstrapのcontainerクラスを上書きしないように調整 */
+    .container-fluid {
+      padding: 0;
     }
   </style>
 </head>
-<body class="container py-4">
+<body>
 
-  <h2>新しい求人を登録</h2>
+  <div class="container-fluid">
+    <!-- メインコンテンツ -->
+    <div class="main-content">
+      <h2>新しい求人を登録</h2>
 
-  <form id="jobForm">
-    <div class="mb-3">
-      <label for="title" class="form-label">職種</label>
-      <input type="text" class="form-control" id="title" required />
-    </div>
-    <div class="mb-3">
-      <label for="description" class="form-label">仕事内容</label>
-      <textarea class="form-control" id="description" required></textarea>
-    </div>
-    <div class="mb-3">
-      <label for="company" class="form-label">会社名</label>
-      <input type="text" class="form-control" id="company" required />
-    </div>
-    <div class="mb-3">
-      <label for="salary" class="form-label">給料</label>
-      <input type="text" class="form-control" id="salary" required />
-    </div>
-    <div class="mb-3">
-      <label for="image" class="form-label">画像URL</label>
-      <input type="text" class="form-control" id="image" />
+      <form id="jobForm">
+        <div class="mb-3">
+          <label for="title" class="form-label">職種</label>
+          <input type="text" class="form-control" id="title" required />
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">仕事内容</label>
+          <textarea class="form-control" id="description" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="company" class="form-label">会社名</label>
+          <input type="text" class="form-control" id="company" required />
+        </div>
+        <div class="mb-3">
+          <label for="salary" class="form-label">給料</label>
+          <input type="text" class="form-control" id="salary" required />
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">画像URL</label>
+          <input type="text" class="form-control" id="image" placeholder="未入力の場合はダミー画像が表示されます" />
+        </div>
+
+        <!-- ボタン横並び -->
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+          <button type="submit" class="btn btn-primary">登録</button>
+          <button type="button" class="btn btn-secondary" onclick="location.href='履歴.html'">登録履歴を見る</button>
+        </div>
+      </form>
     </div>
 
-<!-- ボタン横並び -->
-<div style="display: flex; gap: 1rem; margin-top: 1rem;">
-  <button type="submit" class="btn btn-primary">登録</button>
-  <button type="button" class="btn btn-secondary" onclick="location.href='履歴.html'">登録履歴を見る</button>
-</div>
-
-
-  </form>
+    <!-- サイドバー -->
+    <div class="sidebar">
+      <a href="index.html">ホーム</a>
+      <a href="clips.html">クリップ</a>
+      <a href="ユーザー.html">ユーザー</a>
+      <a href="設定.html">設定</a>
+      <!-- このページが登録ページなので、リンクは不要だがアクティブ状態を示す -->
+      <a href="#" class="active">登録</a>
+    </div>
+  </div>
 
   <script>
+    // フォーム送信の処理
     document.getElementById('jobForm').addEventListener('submit', function(e) {
+      // フォームのデフォルトの送信動作をキャンセル
       e.preventDefault();
 
+      // フォームから入力された値を取得
       const job = {
         title: document.getElementById('title').value,
         description: document.getElementById('description').value,
         company: document.getElementById('company').value,
         salary: document.getElementById('salary').value,
+        // 画像URLが未入力の場合、プレースホルダー画像を設定
         image: document.getElementById('image').value || "https://placehold.jp/300x200.png"
       };
 
+      // ローカルストレージから既存の求人データを取得（なければ空の配列を準備）
       const jobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+      
+      // 新しい求人データを配列に追加
       jobs.push(job);
+      
+      // 更新した配列をJSON文字列に変換してローカルストレージに保存
       localStorage.setItem('jobs', JSON.stringify(jobs));
 
+      // 登録完了のアラートを表示
       alert('求人を登録しました！');
-      window.location.href = 'index.html'; // 登録後にホームに戻る
+      
+      // ホーム画面（index.html）にリダイレクト
+      window.location.href = 'index.html';
     });
   </script>
 
-  <!-- サイドバー -->
-
-  <div class="sidebar">
-    <a href="index.html">ホーム</a>
-    <a href="clips.html" >クリップ</a>
-    <a href="ユーザー.html">ユーザー</a>
-    <a href="設定.html">設定</a>
-    <a href="登録.html" class="active">登録</a>
-  </div>
 </body>
 </html>
