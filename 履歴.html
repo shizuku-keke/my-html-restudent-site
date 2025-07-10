@@ -2,6 +2,9 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
+  <!-- ▼▼▼ ここにviewportを追加しました ▼▼▼ -->
+  <meta name="viewport" content="width=1024" />
+  <!-- ▲▲▲ ここまで ▲▲▲ -->
   <title>登録履歴</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
@@ -19,12 +22,15 @@
       object-fit: cover;
       margin-bottom: 1rem;
     }
-    .clip-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 10;
+    /* .clip-btn はJavaScript側でクラス名が変わるため、.btn-clip-toggle のような固定クラス名に変更するとより管理しやすいです */
+    .job-card button.btn-outline-primary,
+    .job-card button.btn-secondary {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
     }
+
     .sidebar {
       width: 200px;
       background-color: #f8f9fa;
@@ -88,7 +94,8 @@
 
   // クリップされているか判定
   function isClipped(job) {
-    return clips.some(c => c.title === job.title);
+    // 比較対象を増やすことで、より正確に同一求人を判定
+    return clips.some(c => c.title === job.title && c.company === job.company);
   }
 
   function renderJobs() {
@@ -99,12 +106,12 @@
       return;
     }
 
-    jobs.forEach((job, index) => {
+    // 編集中のフォームが一番上に表示されるように
+    const editingJobHtml = jobs.map((job, index) => {
       if (editingIndex === index) {
-        // 編集フォーム表示
-        jobList.innerHTML += `
+        return `
           <h3>求人編集</h3>
-          <form id="editForm${index}">
+          <form id="editForm${index}" class="mb-4">
             <div class="mb-3">
               <label>職種</label>
               <input type="text" id="editTitle${index}" class="form-control" value="${job.title}" required>
@@ -125,46 +132,61 @@
               <label>画像URL</label>
               <input type="text" id="editImage${index}" class="form-control" value="${job.image}">
             </div>
+            <div class="mb-3">
+              <label>詳細ページURL</label>
+              <input type="text" id="editUrl${index}" class="form-control" value="${job.url || ''}">
+            </div>
+            <div class="mb-3">
+              <label>タグ（カンマ区切り）</label>
+              <input type="text" id="editTags${index}" class="form-control" value="${job.tags || ''}">
+            </div>
             <button type="submit" class="btn btn-success">保存</button>
             <button type="button" class="btn btn-secondary ms-2" onclick="cancelEdit()">キャンセル</button>
           </form>
+          <hr>
         `;
-
-        // フォームのsubmitイベント設定
-        document.getElementById(`editForm${index}`).addEventListener('submit', e => {
-          e.preventDefault();
-          saveEdit(index);
-        });
-
-      } else {
-        // 通常の求人カード表示
-        const card = document.createElement('div');
-        card.className = 'job-card';
-
-        // クリップ状態で色や文言変化
-        const clipped = isClipped(job);
-
-        card.innerHTML = `
-          <img src="${job.image}" alt="求人画像">
-          <h5>${job.title}</h5>
-          <p>${job.description}</p>
-          <p><strong>会社名:</strong> ${job.company}</p>
-          <p><strong>給料:</strong> ${job.salary}</p>
-          <button class="btn btn-primary btn-sm me-2" onclick="editJob(${index})">編集</button>
-          <button class="btn btn-danger btn-sm me-2" onclick="deleteJob(${index})">削除</button>
-          <button class="btn btn-${clipped ? 'secondary' : 'outline-primary'} btn-sm clip-btn" onclick="toggleClip(${index})">
-            ${clipped ? 'クリップ済み' : 'クリップ'}
-          </button>
-        `;
-
-        jobList.appendChild(card);
       }
-    });
+      return '';
+    }).join('');
+
+    const jobCardsHtml = jobs.map((job, index) => {
+      if (editingIndex !== index) {
+        const clipped = isClipped(job);
+        return `
+          <div class="job-card">
+            <img src="${job.image}" alt="求人画像">
+            <h5>${job.title}</h5>
+            <p>${job.description}</p>
+            <p><strong>会社名:</strong> ${job.company}</p>
+            <p><strong>給料:</strong> ${job.salary}</p>
+            <p><strong>URL:</strong> ${job.url || '未設定'}</p>
+            <p><strong>タグ:</strong> ${job.tags || '未設定'}</p>
+            <button class="btn btn-primary btn-sm me-2" onclick="editJob(${index})">編集</button>
+            <button class="btn btn-danger btn-sm me-2" onclick="deleteJob(${index})">削除</button>
+            <button class="btn ${clipped ? 'btn-secondary' : 'btn-outline-primary'} btn-sm" onclick="toggleClip(${index})">
+              ${clipped ? 'クリップ済み' : 'クリップ'}
+            </button>
+          </div>
+        `;
+      }
+      return '';
+    }).join('');
+    
+    jobList.innerHTML = editingJobHtml + jobCardsHtml;
+
+    // 編集フォームがある場合、イベントリスナーを再設定
+    if (editingIndex !== null) {
+      document.getElementById(`editForm${editingIndex}`).addEventListener('submit', e => {
+        e.preventDefault();
+        saveEdit(editingIndex);
+      });
+    }
   }
 
   function editJob(index) {
     editingIndex = index;
     renderJobs();
+    window.scrollTo(0, 0); // 編集フォームが見えるように一番上へスクロール
   }
 
   function saveEdit(index) {
@@ -173,7 +195,9 @@
       company: document.getElementById(`editCompany${index}`).value,
       description: document.getElementById(`editDescription${index}`).value,
       salary: document.getElementById(`editSalary${index}`).value,
-      image: document.getElementById(`editImage${index}`).value || "https://placehold.jp/300x200.png"
+      image: document.getElementById(`editImage${index}`).value || "https://placehold.jp/300x200.png",
+      url: document.getElementById(`editUrl${index}`).value,
+      tags: document.getElementById(`editTags${index}`).value,
     };
     localStorage.setItem('jobs', JSON.stringify(jobs));
     editingIndex = null;
@@ -196,7 +220,7 @@
 
   function toggleClip(index) {
     const job = jobs[index];
-    const clipIndex = clips.findIndex(c => c.title === job.title);
+    const clipIndex = clips.findIndex(c => c.title === job.title && c.company === job.company);
 
     if (clipIndex >= 0) {
       // クリップ解除
