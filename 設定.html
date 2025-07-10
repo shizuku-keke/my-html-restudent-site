@@ -121,8 +121,32 @@
     <a href="clips.html">クリップ</a>
     <a href="ユーザー.html">ユーザー</a>
     <a href="設定.html" class="active">設定</a>
-    <a href="登録.html">登録</a>
-  </div>
+    <a href="#" onclick="goToRegister()">登録</a>
+</div>
+
+<script>
+    function goToRegister() {
+      // パスワードを設定
+      const correctPassword = "job123";
+
+      // パスワードの入力を求めるプロンプトを表示
+      const input = prompt("管理用パスワードを入力してください：");
+
+      // 入力がキャンセルされた場合（何もしない）
+      if (input === null) {
+        return;
+      }
+
+      // パスワードが正しいかチェック
+      if (input === correctPassword) {
+        // 正しければ登録ページへ移動
+        window.location.href = "登録.html";
+      } else {
+        // 間違っていればアラートを表示
+        alert("パスワードが間違っています。");
+      }
+    }
+  </script>
 
   <script>
     document.getElementById('saveSettings').addEventListener('click', () => {
