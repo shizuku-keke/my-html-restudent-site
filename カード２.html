@@ -2,7 +2,9 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- ▼▼▼ 1. viewportを固定幅に設定しました ▼▼▼ -->
+  <meta name="viewport" content="width=1024" />
+  <!-- ▲▲▲ ここまで ▲▲▲ -->
   <title>求人詳細 - Web営業職（未経験歓迎）</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
@@ -23,7 +25,9 @@
     .clip-button {
       position: absolute;
       top: 3px;
-      right: 160px;
+      /* ▼▼▼ 2. クリップボタンの位置を調整しました ▼▼▼ */
+      right: calc(50% - 150px - 10px); /* (コンテナ幅/2 - 画像幅/2 - 余白) で画像右上に配置 */
+      /* ▲▲▲ ここまで ▲▲▲ */
       background-color: hsl(221, 70%, 82%);
       color: black;
       border: none;
@@ -76,6 +80,21 @@
       font-size: 1.5rem;
       padding: 1rem 2rem;
     }
+
+    /* ▼▼▼ 2. 「ホームに戻る」ボタンのスタイルを追加しました ▼▼▼ */
+    .home-fixed-button {
+      position: fixed;
+      left: 10px;
+      bottom: 10px;
+      z-index: 1050;
+      padding: 10px 16px;
+      font-weight: bold;
+      border-radius: 6px;
+      text-decoration: none;
+      background-color: #727273;
+      color: #ffffff;
+    }
+    /* ▲▲▲ ここまで ▲▲▲ */
   </style>
 </head>
 <body>
@@ -93,7 +112,7 @@
 
     <div class="job-section">
       <h4>職種</h4>
-      <p id="jobTitle">Webエンジニア</p>
+      <p id="jobTitle">Web営業職（未経験歓迎）</p>
 
       <h4>仕事内容の詳細</h4>
       <p id="jobDescription">人と話すのが好きな方へ！丁寧な研修制度あり。リモートOK。</p>
@@ -115,9 +134,12 @@
     <!-- 応募ボタン -->
     <div class="text-center mt-4">
       <a class="btn btn-success apply-button" id="applyBtn">📨 応募する</a>
-      <a href="index.html" class="btn btn-secondary mt-3">← ホームに戻る</a>
     </div>
-  </div>
+  </div><!-- .main-contentの閉じタグ -->
+
+  <!-- ▼▼▼ 2. 「ホームに戻る」ボタンを外に移動し、クラスを変更しました ▼▼▼ -->
+  <a href="index.html" class="home-fixed-button">← ホームに戻る</a>
+  <!-- ▲▲▲ ここまで ▲▲▲ -->
 
   <!-- サイドバー -->
   <div class="sidebar">
@@ -125,8 +147,32 @@
     <a href="clips.html">クリップ</a>
     <a href="ユーザー.html">ユーザー</a>
     <a href="設定.html">設定</a>
-    <a href="登録.html">登録</a>
-  </div>
+    <a href="#" onclick="goToRegister()">登録</a>
+</div>
+
+<script>
+    function goToRegister() {
+      // パスワードを設定
+      const correctPassword = "job123";
+
+      // パスワードの入力を求めるプロンプトを表示
+      const input = prompt("管理用パスワードを入力してください：");
+
+      // 入力がキャンセルされた場合（何もしない）
+      if (input === null) {
+        return;
+      }
+
+      // パスワードが正しいかチェック
+      if (input === correctPassword) {
+        // 正しければ登録ページへ移動
+        window.location.href = "登録.html";
+      } else {
+        // 間違っていればアラートを表示
+        alert("パスワードが間違っています。");
+      }
+    }
+  </script>
 
   <script>
     // クリップ機能
@@ -167,4 +213,3 @@
 
 </body>
 </html>
-
